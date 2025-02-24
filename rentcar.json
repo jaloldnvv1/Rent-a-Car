@@ -1,8 +1,8 @@
 {
     "buyurtma": {
         "mijoz": {
-            "ism": "Aziz",
-            "telefon": "9876543"
+            "ism": "Muhammadaziz",
+            "telefon": "+998987654321"
         },
         "transport": {
             "brend": "Chevrolet",
@@ -11,9 +11,9 @@
             "kunlik_narx": 500000,
             "mashina_turi": "Malibu 2"
         },
-        "boshlanish_sanasi": "2025-02-23",
-        "tugash_sanasi": "2025-02-27",
-        "umumiy_narx": 2000000,
+        "boshlanish_sanasi": "2025-02-26",
+        "tugash_sanasi": "2025-03-10",
+        "umumiy_narx": 6000000,
         "haydovchi": null
     },
     "tolov_usuli": "Naqd",

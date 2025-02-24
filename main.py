@@ -51,9 +51,6 @@ class Mijoz:
         self.ism = ism
         self.telefon = telefon
 
-    def mijoz_info(self):
-        return f"Mijoz: {self.ism}\nTel: {self.telefon}"
-
     def to_dict(self):
         return {
             "ism": self.ism,
@@ -66,9 +63,6 @@ class Haydovchi:
         self.ism = ism
         self.yosh = yosh
         self.tajriba_yil = tajriba_yil
-
-    def haydovchi_info(self):
-        return f"Haydovchi: {self.ism}, Yosh: {self.yosh}, Tajriba: {self.tajriba_yil} yil"
 
     def to_dict(self):
         return {
@@ -101,15 +95,6 @@ class Buyurtma:
             "haydovchi": self.haydovchi.to_dict() if self.haydovchi else None,
         }
 
-    def __str__(self):
-        buyurtma_info = (
-            f"{self.mijoz.ism} uchun buyurtma: {self.transport} {self.boshlanish_sanasi.date()} dan "
-            f"{self.tugash_sanasi.date()} gacha - Umumiy narx: {self.umumiy_narx}-so'm"
-        )
-        if self.haydovchi:
-            buyurtma_info += f"\n{self.haydovchi.haydovchi_info()}"
-        return buyurtma_info
-
 
 class Tolov:
     def __init__(self, buyurtma, tolov_usuli):
@@ -127,49 +112,49 @@ class Tolov:
             "status": self.status,
         }
 
-    def __str__(self):
-        return f"Buyurtma: {self.buyurtma.mijoz.ism}, To'lov usuli: {self.tolov_usuli}, Holat: {self.status}"
 
+while True:
+    print("\n=== Menyu ===")
+    print("1. Mashina ijarasi")
+    print("2. Dasturdan chiqish !!!")
+    ajratish()
+    tanlov = input("Tanlovni kiriting: ")
 
-ajratish()
-print("Rent Car - Avtomobil ijaraga olish ")
-ajratish()
+    if tanlov == "1":
+        ism = input("Ismingizni kirting >>> ")
+        telefon = input("Telefon raqamingizni kiriting >>> ")
+        mijoz = Mijoz(ism, telefon)
+        mashina_tanlov = input("Qanday mashinani ijaraga olmoqchisz? (Malibu/Gentra/Kia): ").lower()
+        if mashina_tanlov == "malibu":
+            transport = Malibu("Chevrolet", "Malibu 2", 2020, 500_000)
+        elif mashina_tanlov == "gentra":
+            transport = Gentra("Chevrolet", "Gentra", 2022, 400_000)
+        elif mashina_tanlov == "kia":
+            transport = Kia("Kia", "K5", 2021, 600_000)
+        else:
+            print("Bunday mashina mavjud emas !")
+            break
 
-ism = input("Ismingizni kirting >>> ")
-telefon = input("Telefon raqamingizni kiriting >>> ")
-mijoz = Mijoz(ism, telefon)
+        start_date = datetime.strptime(input("Ijara boshlanish sanasi (YYYY-MM-DD): "), "%Y-%m-%d")
+        end_date = datetime.strptime(input("Ijara tugash sanasi (YYYY-MM-DD): "), "%Y-%m-%d")
 
-mashina_tanlov = input("Qanday mashinani ijaraga olmoqchisz? (Malibu/Gentra/Kia): ").lower()
-if mashina_tanlov == "malibu":
-    transport = Malibu("Chevrolet", "Malibu 2", 2020, 500_000)
-elif mashina_tanlov == "gentra":
-    transport = Gentra("Chevrolet", "Gentra", 2022, 400_000)
-elif mashina_tanlov == "kia":
-    transport = Kia("Kia", "K5", 2021, 600_000)
-else:
-    print(f"Bizda {mashina_tanlov} rusumli mashina yoq.  Dasturdan chiqdingiz !!!")
-    exit()
+        haydovchi = ""
+        if input("Haydovchi kerakmi ? (ha/yoq): ").lower() == "ha":
+            haydovchi = Haydovchi("Sharifjon", 18, 2)
 
-start_date = datetime.strptime(input("Ijara boshlanish sanasi (YYYY-MM-DD): "), "%Y-%m-%d")
-end_date = datetime.strptime(input("Ijara tugash sanasi (YYYY-MM-DD): "), "%Y-%m-%d")
+        buyurtma = Buyurtma(mijoz, transport, start_date, end_date, haydovchi)
+        print(buyurtma)
 
-haydovchi = ""
-if input("Haydovchi kerakmi ? (ha/yoq): ").lower() == "ha":
-    haydovchi = Haydovchi("Sharifjon", 18, 2)
+        tolov_usuli = input("To‘lov usulini tanlang (Naqd/Karta): ").capitalize()
+        tolov = Tolov(buyurtma, tolov_usuli)
+        tolov.tolov_qilish()
 
-buyurtma = Buyurtma(mijoz, transport, start_date, end_date, haydovchi)
+        with open("rentcar.json", "w", encoding="utf-8") as file:
+            json.dump(tolov.to_dict(), file, ensure_ascii=False, indent=4)
 
-ajratish()
-print(buyurtma)
-ajratish()
-
-tolov_usuli = input("To‘lov (Naqd/Karta): ").capitalize()
-tolov = Tolov(buyurtma, tolov_usuli)
-tolov.tolov_qilish()
-
-ajratish()
-print(tolov)
-ajratish()
-
-with open("rentcar.json", "w", encoding="utf-8") as file:
-    json.dump(tolov.to_dict(), file, ensure_ascii=False, indent=4)
+    elif tanlov == "2":
+        print("Dastur tugatildi")
+        break
+    else:
+        print("Notogri tanlov! Qaytadan urinib ko'ring")
+        break
